@@ -6,6 +6,8 @@ import { InvoiceWithItems, DocumentType, Organization } from '@/types';
 interface InvoiceDocumentProps {
     invoice: InvoiceWithItems;
     organization: Organization | null;
+    operatorName?: string | null;
+    isReprint?: boolean;
 }
 
 const getDocTypeName = (type: DocumentType): string => {
@@ -29,11 +31,15 @@ const formatCurrency = (value: number): string => {
 };
 
 const formatDate = (date: string): string => {
-    return new Date(date).toLocaleDateString('pt-AO', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-    });
+    const d = new Date(date);
+    const day = d.getDate().toString().padStart(2, '0');
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const year = d.getFullYear();
+    const hours = d.getHours().toString().padStart(2, '0');
+    const minutes = d.getMinutes().toString().padStart(2, '0');
+    const seconds = d.getSeconds().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
 /**
@@ -42,7 +48,7 @@ const formatDate = (date: string): string => {
  * Usar em ambos os contextos: visualização web e geração de PDF.
  */
 const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
-    ({ invoice, organization }, ref) => {
+    ({ invoice, organization, operatorName, isReprint = false }, ref) => {
         if (!invoice) return null;
 
         return (
@@ -59,6 +65,8 @@ const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
                     fontSize: '9pt', // Definindo tamanho base explícito
                 }}
             >
+
+
                 {/* Status Watermark for Non-Issued States */}
                 {invoice.status !== 'EMITIDA' && (
                     <div
@@ -131,6 +139,8 @@ const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
                             Nº {invoice.invoice_number}
                         </p>
 
+
+
                         <div
                             style={{
                                 backgroundColor: '#f9fafb',
@@ -158,6 +168,22 @@ const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
 
                 {/* Customer Section */}
                 <div style={{ marginBottom: '12mm', position: 'relative', zIndex: 10 }}>
+                    {/* Original/Copy Label - Positioned above customer section, right aligned */}
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: '-5mm',
+                            right: '0',
+                            fontSize: '9pt',
+                            fontWeight: 700,
+                            textTransform: 'uppercase',
+                            color: '#6b7280',
+                            zIndex: 30
+                        }}
+                    >
+                        {isReprint ? '2ª Via' : 'Original'}
+                    </div>
+
                     <div
                         style={{
                             backgroundColor: '#f9fafb',
@@ -330,6 +356,15 @@ const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
                                     Full Hash: {invoice.hash}
                                 </p>
                             )}
+                        </div>
+                        <div style={{ textAlign: 'right', fontSize: '7pt', color: '#9ca3af' }}>
+                            <p style={{ marginBottom: '1mm' }}>
+                                Operador: {operatorName || 'Sistema'}
+                            </p>
+                            <p style={{ marginBottom: '1mm', fontStyle: 'italic' }}>
+                                "Os bens e serviços foram colocado a disposição do adequerente neste data"
+                            </p>
+                            Página: 1 de 1
                         </div>
                     </div>
                 </div>

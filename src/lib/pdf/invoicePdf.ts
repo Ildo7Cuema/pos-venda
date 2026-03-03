@@ -86,6 +86,15 @@ export async function generateInvoicePDFFromElement(
     // Gerar nome do ficheiro
     const fileName = `${getDocTypeName(invoice.document_type)}_${invoice.invoice_number.replace(/\//g, '-')}.pdf`;
 
+    // Adicionar numeração de páginas
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(7);
+        doc.setTextColor(156, 163, 175); // gray-400
+        doc.text(`Página: ${i} de ${totalPages}`, pdfWidth - 10, pdfHeight - 10, { align: 'right' });
+    }
+
     // Download do PDF
     doc.save(fileName);
 }
@@ -142,11 +151,15 @@ function generateInvoiceHTML(invoice: InvoiceWithItems, organization: Organizati
     };
 
     const formatDate = (date: string): string => {
-        return new Date(date).toLocaleDateString('pt-AO', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-        });
+        const d = new Date(date);
+        const day = d.getDate().toString().padStart(2, '0');
+        const month = (d.getMonth() + 1).toString().padStart(2, '0');
+        const year = d.getFullYear();
+        const hours = d.getHours().toString().padStart(2, '0');
+        const minutes = d.getMinutes().toString().padStart(2, '0');
+        const seconds = d.getSeconds().toString().padStart(2, '0');
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
 
     const itemsHTML = invoice.items.map(item => `

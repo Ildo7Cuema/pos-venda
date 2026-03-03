@@ -169,6 +169,12 @@ class SQLiteManager {
                         this.db.run("ALTER TABLE subscription_requests ADD COLUMN customer_phone TEXT");
                     }
 
+                    // 6. Invoices Print Count Migration
+                    if (!invoiceCols.some((col: any) => col.name === 'print_count')) {
+                        console.log('Running migration: Adding print_count to invoices');
+                        this.db.run("ALTER TABLE invoices ADD COLUMN print_count INTEGER DEFAULT 0");
+                    }
+
                     // Always save after potential schema changes
                     this.save();
                 } catch (e) {

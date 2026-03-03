@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { InvoiceWithItems, Organization } from '@/types';
+import { InvoiceWithItems, Organization, User } from '@/types';
 import InvoiceDocument from './InvoiceDocument';
 import CreditNoteModal from './CreditNoteModal';
 import DebitNoteModal from './DebitNoteModal';
@@ -33,6 +33,8 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice }) => {
     const { user } = useAuthStore();
     const { voidInvoice, fetchInvoiceById } = useInvoiceStore();
     const [organization, setOrganization] = useState<Organization | null>(null);
+    const [operatorName, setOperatorName] = useState<string | null>(null);
+    const [printCount, setPrintCount] = useState<number>(invoice.print_count || 0);
     const [showVoidModal, setShowVoidModal] = useState(false);
     const [showConvertModal, setShowConvertModal] = useState(false);
     const [showCreditNoteModal, setShowCreditNoteModal] = useState(false);
@@ -55,6 +57,20 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice }) => {
                 console.error('Failed to fetch organization details:', error);
             }
         }
+
+        if (invoice?.user_id) {
+            try {
+                const user = db.queryOne<User>('SELECT full_name FROM users WHERE id = ?', [invoice.user_id]);
+                if (user) {
+                    setOperatorName(user.full_name);
+                }
+            } catch (error) {
+                console.error('Failed to fetch user details:', error);
+            }
+        }
+
+        // Update print count from invoice prop
+        setPrintCount(invoice.print_count || 0);
     }, [invoice]);
 
     if (!invoice) return null;
@@ -65,8 +81,16 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice }) => {
     const canConvert = isProforma && invoice.status === 'EMITIDA';
     const canCreateNC = isFiscalInvoice && invoice.status === 'EMITIDA';
 
-    const handlePrint = () => {
+    const handlePrint = async () => {
         window.print();
+
+        // Increment print count after print dialog is opened/closed
+        try {
+            await InvoiceRepository.incrementPrintCount(invoice.id);
+            setPrintCount(prev => prev + 1);
+        } catch (error) {
+            console.error('Failed to increment print count:', error);
+        }
     };
 
     const handleDownloadPDF = async () => {
@@ -78,6 +102,10 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice }) => {
         setIsGeneratingPdf(true);
         try {
             await generateInvoicePDFFromElement(invoiceDocumentRef.current, invoice);
+
+            // Increment print count after successful PDF generation
+            await InvoiceRepository.incrementPrintCount(invoice.id);
+            setPrintCount(prev => prev + 1);
         } catch (error) {
             console.error('Failed to generate PDF:', error);
             alert('Erro ao gerar PDF: ' + (error as Error).message);
@@ -258,6 +286,8 @@ const InvoiceDetail: React.FC<InvoiceDetailProps> = ({ invoice }) => {
                     ref={invoiceDocumentRef}
                     invoice={invoice}
                     organization={organization}
+                    operatorName={operatorName}
+                    isReprint={printCount > 0}
                 />
             </div>
 

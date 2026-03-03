@@ -21,9 +21,33 @@ import {
     Download,
     RefreshCcw,
     Calendar,
-    Activity
+    Activity,
+    Copy,
+    Check
 } from 'lucide-react';
 import db from '@/lib/db/sqlite';
+
+const CopyButton = ({ text, label }: { text: string | null; label: string }) => {
+    const [copied, setCopied] = useState(false);
+
+    if (!text) return null;
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    return (
+        <button
+            onClick={handleCopy}
+            className="p-1.5 text-gray-400 hover:text-[var(--primary)] hover:bg-blue-50 rounded-md transition-colors"
+            title={`Copiar ${label}`}
+        >
+            {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+        </button>
+    );
+};
 
 const SubscriptionSettings: React.FC = () => {
     const { user } = useAuthStore();
@@ -299,20 +323,36 @@ Aguardo o código de activação. Obrigado!`;
                                 ) : (
                                     <div className="space-y-6 animate-pulse-once">
                                         {/* Payment Info */}
-                                        <div className="space-y-2 text-sm bg-white p-4 rounded-lg border border-gray-200">
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-500">Banco:</span>
-                                                <span className="font-medium text-gray-900">{PAYMENT_INFO.bank}</span>
-                                            </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-500">IBAN:</span>
-                                                <span className="font-mono text-gray-900">{PAYMENT_INFO.iban}</span>
-                                            </div>
-                                            <div className="flex justify-between items-center pt-2 border-t mt-2">
-                                                <span className="text-gray-500">Referência:</span>
-                                                <span className="font-mono font-bold text-lg text-[var(--primary)] bg-blue-50 px-2 rounded">
-                                                    {generatedReference}
-                                                </span>
+                                        {/* Payment Info */}
+                                        <div className="bg-white p-5 rounded-lg border border-gray-200">
+                                            <div className="grid gap-4">
+                                                {/* Bank Info */}
+                                                <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2 border-b border-gray-100 last:border-0">
+                                                    <span className="text-gray-500 text-sm">Banco</span>
+                                                    <span className="font-medium text-gray-900">{PAYMENT_INFO.bank}</span>
+                                                </div>
+
+                                                {/* IBAN Section */}
+                                                <div className="flex flex-col sm:flex-row justify-between sm:items-start py-2 border-b border-gray-100 gap-2">
+                                                    <span className="text-gray-500 text-sm pt-1">IBAN</span>
+                                                    <div className="flex items-center gap-2 max-w-full">
+                                                        <code className="font-mono text-gray-900 bg-gray-50 px-2 py-1 rounded text-sm break-all sm:text-right">
+                                                            {PAYMENT_INFO.iban}
+                                                        </code>
+                                                        <CopyButton text={PAYMENT_INFO.iban} label="IBAN" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Reference Section */}
+                                                <div className="flex flex-col sm:flex-row justify-between sm:items-center py-2 gap-2">
+                                                    <span className="text-gray-500 text-sm">Referência</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-mono font-bold text-lg text-[var(--primary)] bg-blue-50 px-3 py-1 rounded">
+                                                            {generatedReference}
+                                                        </span>
+                                                        <CopyButton text={generatedReference} label="Referência" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 

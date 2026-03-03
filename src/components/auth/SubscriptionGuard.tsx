@@ -22,7 +22,7 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
     const router = useRouter();
     const pathname = usePathname();
     const { user } = useAuthStore();
-    const { hasActiveSubscription, loadSubscription, isLoading } = useSubscriptionStore();
+    const { hasActiveSubscription, loadSubscription, isLoading, currentSubscription } = useSubscriptionStore();
 
     useEffect(() => {
         if (user?.organization_id) {
@@ -51,6 +51,44 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
     }
 
     // BLOCKING STATE
+
+    // CASE 1: New Organization (No Subscription History)
+    if (!currentSubscription) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+                <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
+                    <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Lock className="w-10 h-10 text-blue-600" />
+                    </div>
+
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Configuração Inicial Necessária</h1>
+                    <p className="text-gray-600 mb-6">
+                        Bem-vindo ao sistema! Para começar a utilizar, é necessário activar uma licença de uso.
+                    </p>
+
+                    <div className="space-y-3">
+                        {user.role === 'ADMIN' && (
+                            <Button
+                                variant="primary"
+                                className="w-full"
+                                onClick={() => router.push('/dashboard/settings')}
+                            >
+                                Configurar Agora
+                            </Button>
+                        )}
+
+                        {user.role !== 'ADMIN' && (
+                            <p className="text-xs text-gray-500 mt-4">
+                                Se não é administrador, contacte o responsável da sua empresa.
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // CASE 2: Expired Subscription
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
             <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
@@ -76,13 +114,15 @@ export const SubscriptionGuard: React.FC<SubscriptionGuardProps> = ({ children }
                 </div>
 
                 <div className="space-y-3">
-                    <Button
-                        variant="primary"
-                        className="w-full"
-                        onClick={() => router.push('/dashboard/settings')}
-                    >
-                        Renovar Assinatura Agora
-                    </Button>
+                    {user.role === 'ADMIN' && (
+                        <Button
+                            variant="primary"
+                            className="w-full"
+                            onClick={() => router.push('/dashboard/settings')}
+                        >
+                            Renovar Assinatura Agora
+                        </Button>
+                    )}
 
                     {user.role !== 'ADMIN' && (
                         <p className="text-xs text-gray-500 mt-4">

@@ -58,8 +58,6 @@ export const useSubscriptionStore = create<SubscriptionState>()(
                     const subscription = db.queryOne<Subscription>(
                         `SELECT * FROM subscriptions 
                          WHERE organization_id = ? 
-                         AND status = 'ACTIVE'
-                         AND date(end_date) >= date('now')
                          ORDER BY end_date DESC
                          LIMIT 1`,
                         [organizationId]

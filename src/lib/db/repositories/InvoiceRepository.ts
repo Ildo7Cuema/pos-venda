@@ -389,4 +389,16 @@ export class InvoiceRepository {
             monthTotal: monthResult?.total || 0
         };
     }
+    /**
+     * Incrementar contador de impressões
+     */
+    static async incrementPrintCount(id: string): Promise<void> {
+        const sql = `
+            UPDATE invoices 
+            SET print_count = COALESCE(print_count, 0) + 1,
+                updated_at = ?
+            WHERE id = ?
+        `;
+        db.run(sql, [new Date().toISOString(), id]);
+    }
 }
