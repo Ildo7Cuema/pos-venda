@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Card from '@/components/ui/Card';
-import { TrendingUp, TrendingDown, DollarSign, ShoppingCart, CreditCard, Banknote } from 'lucide-react';
+import { TrendingUp, TrendingDown, ShoppingCart, CreditCard, Banknote } from 'lucide-react';
 import {
     AreaChart,
     Area,
@@ -80,7 +80,7 @@ const SalesReport: React.FC<SalesReportProps> = ({
                             )}
                         </div>
                         <div className="p-3 bg-green-100 rounded-full">
-                            <DollarSign className="w-6 h-6 text-green-600" />
+                            <Banknote className="w-6 h-6 text-green-600" />
                         </div>
                     </div>
                 </Card>
