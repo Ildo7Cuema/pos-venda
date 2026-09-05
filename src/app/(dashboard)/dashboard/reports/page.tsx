@@ -6,7 +6,9 @@ import ReportFilters, { ReportPeriod } from '@/components/reports/ReportFilters'
 import SalesReport from '@/components/reports/SalesReport';
 import ProductsReport from '@/components/reports/ProductsReport';
 import db from '@/lib/db/sqlite';
-import { BarChart3, ShoppingCart, Package, TrendingUp } from 'lucide-react';
+import { downloadExcelWorkbook, excelNumber } from '@/lib/excel/exportReport';
+import { useToast } from '@/components/ui/Toast';
+import { ShoppingCart, Package } from 'lucide-react';
 
 type ReportTab = 'sales' | 'products';
 
@@ -41,11 +43,13 @@ interface LowStockProduct {
 
 export default function ReportsPage() {
     const { user } = useAuthStore();
+    const toast = useToast();
     const [activeTab, setActiveTab] = useState<ReportTab>('sales');
     const [period, setPeriod] = useState<ReportPeriod>('month');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
 
     // Sales Report Data
     const [salesData, setSalesData] = useState<SalesData[]>([]);
@@ -250,6 +254,267 @@ export default function ReportsPage() {
         fetchData();
     }, [user?.organization_id, activeTab, period]);
 
+    const handleExportExcel = async () => {
+        if (!user?.organization_id) {
+            toast.error('Erro', 'Organização não identificada.');
+            return;
+        }
+
+        const { start, end } = getDateRange();
+        if (period === 'custom' && (!start || !end)) {
+            toast.error('Período incompleto', 'Indique a data de início e fim antes de exportar.');
+            return;
+        }
+
+        setIsExporting(true);
+        try {
+            if (activeTab === 'sales') {
+                const saleItems = await db.query<{
+                    sale_number: string;
+                    sale_date: string;
+                    product_code: string;
+                    product_name: string;
+                    quantity: number;
+                    unit_price: number;
+                    tax_amount: number;
+                    discount_amount: number;
+                    line_total: number;
+                    customer_name: string | null;
+                    payment_method: string;
+                    seller_name: string | null;
+                }>(`
+                    SELECT 
+                        s.sale_number,
+                        s.sale_date,
+                        si.product_code,
+                        si.product_name,
+                        si.quantity,
+                        si.unit_price,
+                        si.tax_amount,
+                        si.discount_amount,
+                        si.line_total,
+                        s.customer_name,
+                        s.payment_method,
+                        u.full_name as seller_name
+                    FROM sale_items si
+                    JOIN sales s ON si.sale_id = s.id
+                    LEFT JOIN users u ON s.user_id = u.id
+                    WHERE s.organization_id = ?
+                      AND date(s.sale_date) >= date(?)
+                      AND date(s.sale_date) <= date(?)
+                    ORDER BY s.sale_date ASC, s.sale_number ASC, si.product_name ASC
+                `, [user.organization_id, start, end]);
+
+                const salesList = await db.query<{
+                    sale_number: string;
+                    sale_date: string;
+                    customer_name: string | null;
+                    payment_method: string;
+                    subtotal: number;
+                    tax_amount: number;
+                    discount_amount: number;
+                    total_amount: number;
+                    payment_status: string;
+                    seller_name: string | null;
+                }>(`
+                    SELECT 
+                        s.sale_number,
+                        s.sale_date,
+                        s.customer_name,
+                        s.payment_method,
+                        s.subtotal,
+                        s.tax_amount,
+                        s.discount_amount,
+                        s.total_amount,
+                        s.payment_status,
+                        u.full_name as seller_name
+                    FROM sales s
+                    LEFT JOIN users u ON s.user_id = u.id
+                    WHERE s.organization_id = ?
+                      AND date(s.sale_date) >= date(?)
+                      AND date(s.sale_date) <= date(?)
+                    ORDER BY s.sale_date ASC
+                `, [user.organization_id, start, end]);
+
+                const salesByDay = await db.query<{ date: string; total: number; count: number }>(`
+                    SELECT 
+                        date(sale_date) as date,
+                        SUM(total_amount) as total,
+                        COUNT(*) as count
+                    FROM sales 
+                    WHERE organization_id = ? 
+                      AND date(sale_date) >= date(?) 
+                      AND date(sale_date) <= date(?)
+                    GROUP BY date(sale_date)
+                    ORDER BY date ASC
+                `, [user.organization_id, start, end]);
+
+                const payments = await db.query<{ payment_method: string; total: number; count: number }>(`
+                    SELECT 
+                        payment_method,
+                        SUM(total_amount) as total,
+                        COUNT(*) as count
+                    FROM sales 
+                    WHERE organization_id = ? 
+                      AND date(sale_date) >= date(?) 
+                      AND date(sale_date) <= date(?)
+                    GROUP BY payment_method
+                `, [user.organization_id, start, end]);
+
+                const totals = await db.queryOne<{ count: number; total: number }>(`
+                    SELECT 
+                        COUNT(*) as count,
+                        COALESCE(SUM(total_amount), 0) as total
+                    FROM sales 
+                    WHERE organization_id = ? 
+                      AND date(sale_date) >= date(?) 
+                      AND date(sale_date) <= date(?)
+                `, [user.organization_id, start, end]);
+
+                const avg = totals?.count ? totals.total / totals.count : 0;
+
+                downloadExcelWorkbook(
+                    [
+                        {
+                            name: 'Resumo',
+                            rows: [
+                                { Indicador: 'Período início', Valor: start },
+                                { Indicador: 'Período fim', Valor: end },
+                                { Indicador: 'Total de vendas', Valor: excelNumber(totals?.count) },
+                                { Indicador: 'Receita total (AOA)', Valor: excelNumber(totals?.total) },
+                                { Indicador: 'Ticket médio (AOA)', Valor: excelNumber(avg) },
+                            ],
+                        },
+                        {
+                            name: 'Detalhe Produtos',
+                            rows: saleItems.map((item) => ({
+                                'Data da Venda': item.sale_date,
+                                'Nº Venda': item.sale_number,
+                                'Código': item.product_code,
+                                'Produto': item.product_name,
+                                'Quantidade': excelNumber(item.quantity),
+                                'Preço Unitário (AOA)': excelNumber(item.unit_price),
+                                'Desconto (AOA)': excelNumber(item.discount_amount),
+                                'Imposto (AOA)': excelNumber(item.tax_amount),
+                                'Total Linha (AOA)': excelNumber(item.line_total),
+                                'Vendido por': item.seller_name || '—',
+                                'Cliente': item.customer_name || 'Consumidor Final',
+                                'Pagamento': item.payment_method,
+                            })),
+                        },
+                        {
+                            name: 'Vendas',
+                            rows: salesList.map((s) => ({
+                                'Nº Venda': s.sale_number,
+                                'Data': s.sale_date,
+                                'Cliente': s.customer_name || 'Consumidor Final',
+                                'Vendido por': s.seller_name || '—',
+                                'Pagamento': s.payment_method,
+                                'Estado': s.payment_status,
+                                'Subtotal': excelNumber(s.subtotal),
+                                'Imposto': excelNumber(s.tax_amount),
+                                'Desconto': excelNumber(s.discount_amount),
+                                'Total (AOA)': excelNumber(s.total_amount),
+                            })),
+                        },
+                        {
+                            name: 'Por Dia',
+                            rows: salesByDay.map((d) => ({
+                                'Data': d.date,
+                                'Nº Vendas': excelNumber(d.count),
+                                'Total (AOA)': excelNumber(d.total),
+                            })),
+                        },
+                        {
+                            name: 'Pagamentos',
+                            rows: payments.map((p) => ({
+                                'Método': p.payment_method,
+                                'Nº Vendas': excelNumber(p.count),
+                                'Total (AOA)': excelNumber(p.total),
+                            })),
+                        },
+                    ],
+                    `relatorio_vendas_${start}_${end}`
+                );
+            } else {
+                const productsSold = await db.query<TopProduct>(`
+                    SELECT 
+                        si.product_id as id,
+                        si.product_name as name,
+                        si.product_code as code,
+                        SUM(si.quantity) as quantity,
+                        SUM(si.line_total) as revenue
+                    FROM sale_items si
+                    JOIN sales s ON si.sale_id = s.id
+                    WHERE s.organization_id = ? 
+                      AND date(s.sale_date) >= date(?) 
+                      AND date(s.sale_date) <= date(?)
+                    GROUP BY si.product_id
+                    ORDER BY quantity DESC
+                `, [user.organization_id, start, end]);
+
+                const lowStock = await db.query<LowStockProduct>(`
+                    SELECT id, name, code, current_stock, min_stock
+                    FROM products 
+                    WHERE organization_id = ? 
+                      AND is_active = 1
+                      AND current_stock <= min_stock
+                    ORDER BY current_stock ASC
+                `, [user.organization_id]);
+
+                const stats = await db.queryOne<{ total: number; active: number; out_of_stock: number }>(`
+                    SELECT 
+                        COUNT(*) as total,
+                        SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active,
+                        SUM(CASE WHEN current_stock = 0 THEN 1 ELSE 0 END) as out_of_stock
+                    FROM products 
+                    WHERE organization_id = ?
+                `, [user.organization_id]);
+
+                downloadExcelWorkbook(
+                    [
+                        {
+                            name: 'Resumo',
+                            rows: [
+                                { Indicador: 'Período início', Valor: start },
+                                { Indicador: 'Período fim', Valor: end },
+                                { Indicador: 'Total produtos', Valor: excelNumber(stats?.total) },
+                                { Indicador: 'Produtos activos', Valor: excelNumber(stats?.active) },
+                                { Indicador: 'Sem stock', Valor: excelNumber(stats?.out_of_stock) },
+                            ],
+                        },
+                        {
+                            name: 'Produtos Vendidos',
+                            rows: productsSold.map((p) => ({
+                                'Código': p.code,
+                                'Produto': p.name,
+                                'Quantidade': excelNumber(p.quantity),
+                                'Receita (AOA)': excelNumber(p.revenue),
+                            })),
+                        },
+                        {
+                            name: 'Stock Baixo',
+                            rows: lowStock.map((p) => ({
+                                'Código': p.code,
+                                'Produto': p.name,
+                                'Stock Actual': excelNumber(p.current_stock),
+                                'Stock Mínimo': excelNumber(p.min_stock),
+                            })),
+                        },
+                    ],
+                    `relatorio_produtos_${start}_${end}`
+                );
+            }
+
+            toast.success('Excel gerado', 'O relatório foi descarregado com sucesso.');
+        } catch (error) {
+            console.error('Erro ao exportar Excel:', error);
+            toast.error('Erro', 'Não foi possível gerar o ficheiro Excel.');
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
     const tabs = [
         { id: 'sales' as ReportTab, label: 'Vendas', icon: ShoppingCart },
         { id: 'products' as ReportTab, label: 'Produtos', icon: Package },
@@ -291,7 +556,8 @@ export default function ReportsPage() {
                 onStartDateChange={setStartDate}
                 onEndDateChange={setEndDate}
                 onRefresh={fetchData}
-                isLoading={isLoading}
+                onExport={handleExportExcel}
+                isLoading={isLoading || isExporting}
             />
 
             {/* Report Content */}

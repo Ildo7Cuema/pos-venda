@@ -9,27 +9,27 @@ import CryptoJS from 'crypto-js';
 export const SUBSCRIPTION_PLANS = {
     MENSAL: {
         label: 'Mensal',
-        price: 15000,
+        price: 35000,
         duration: 30, // dias
         description: '1 mês de acesso completo',
     },
     TRIMESTRAL: {
         label: 'Trimestral',
-        price: 40000,
+        price: 65000,
         duration: 90,
-        description: '3 meses de acesso (economia de 5.000 AOA)',
+        description: '3 meses de acesso (economia de 40.000 AOA)',
     },
     SEMESTRAL: {
         label: 'Semestral',
-        price: 75000,
+        price: 95000,
         duration: 180,
-        description: '6 meses de acesso (economia de 15.000 AOA)',
+        description: '6 meses de acesso (economia de 115.000 AOA)',
     },
     ANUAL: {
         label: 'Anual',
-        price: 140000,
+        price: 125000,
         duration: 365,
-        description: '12 meses de acesso (economia de 40.000 AOA)',
+        description: '12 meses de acesso (economia de 295.000 AOA)',
     },
 } as const;
 

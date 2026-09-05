@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import useSubscriptionStore from '@/store/subscriptionStore';
 import {
-    SUBSCRIPTION_PLANS,
     PAYMENT_INFO,
     formatCurrency,
     generateReferenceCode,
@@ -12,6 +11,10 @@ import {
     type PlanType,
     daysRemaining
 } from '@/lib/subscription/activationService';
+import {
+    loadSubscriptionPlans,
+    type SubscriptionPlansMap,
+} from '@/lib/subscription/planPricing';
 import { Card, Button, Input, Alert } from '@/components/ui';
 import {
     CreditCard,
@@ -26,6 +29,7 @@ import {
     Check
 } from 'lucide-react';
 import db from '@/lib/db/sqlite';
+import { useDataRefresh } from '@/hooks/useDataRefresh';
 
 const CopyButton = ({ text, label }: { text: string | null; label: string }) => {
     const [copied, setCopied] = useState(false);
@@ -52,8 +56,10 @@ const CopyButton = ({ text, label }: { text: string | null; label: string }) => 
 const SubscriptionSettings: React.FC = () => {
     const { user } = useAuthStore();
     const { currentSubscription, loadSubscription, hasActiveSubscription, isLoading } = useSubscriptionStore();
+    const refreshKey = useDataRefresh();
 
     // UI State
+    const [plans, setPlans] = useState<SubscriptionPlansMap>(() => loadSubscriptionPlans());
     const [selectedPlan, setSelectedPlan] = useState<PlanType>('MENSAL');
     const [isRequesting, setIsRequesting] = useState(false);
     const [generatedReference, setGeneratedReference] = useState<string | null>(null);
@@ -61,6 +67,10 @@ const SubscriptionSettings: React.FC = () => {
     const [isActivating, setIsActivating] = useState(false);
     const [activationError, setActivationError] = useState('');
     const [activationSuccess, setActivationSuccess] = useState(false);
+
+    useEffect(() => {
+        setPlans(loadSubscriptionPlans());
+    }, [refreshKey]);
 
     useEffect(() => {
         if (user?.organization_id) {
@@ -78,7 +88,7 @@ const SubscriptionSettings: React.FC = () => {
             setGeneratedReference(refCode);
 
             // Save request to DB (Simulated "Pending" state)
-            const plan = SUBSCRIPTION_PLANS[selectedPlan];
+            const plan = plans[selectedPlan];
 
             await db.run(`
                 INSERT INTO subscription_requests (
@@ -113,8 +123,8 @@ const SubscriptionSettings: React.FC = () => {
         const message = `📋 *PEDIDO DE ACTIVAÇÃO - KAMBA POS*
 
 📌 Referência: *${generatedReference}*
-📦 Plano: ${SUBSCRIPTION_PLANS[selectedPlan].label}
-💰 Valor: ${formatCurrency(SUBSCRIPTION_PLANS[selectedPlan].price)}
+📦 Plano: ${plans[selectedPlan].label}
+💰 Valor: ${formatCurrency(plans[selectedPlan].price)}
 
 📎 *Por favor envie o comprovativo de pagamento em anexo.*
 
@@ -148,7 +158,7 @@ Aguardo o código de activação. Obrigado!`;
             }
 
             // Create valid subscription
-            const plan = SUBSCRIPTION_PLANS[selectedPlan];
+            const plan = plans[selectedPlan];
             const startDate = new Date();
             const endDate = new Date();
             endDate.setDate(endDate.getDate() + plan.duration);
@@ -210,7 +220,8 @@ Aguardo o código de activação. Obrigado!`;
                                 Como SuperAdmin, tem acesso completo ao sistema sem necessidade de assinatura.
                             </p>
                             <p className="text-sm text-gray-500 mt-2">
-                                Para gerir activações de clientes, aceda ao separador <strong>"Activações"</strong>.
+                                Para gerir activações de clientes, aceda ao separador <strong>&quot;Activações&quot;</strong>.
+                                Para alterar os valores das licenças, use <strong>&quot;Preços Licenças&quot;</strong>.
                             </p>
                         </div>
                     </div>
@@ -240,7 +251,7 @@ Aguardo o código de activação. Obrigado!`;
                         <div>
                             <p className="text-sm text-gray-500 font-medium">Plano Actual</p>
                             <h3 className="text-2xl font-bold mt-1 text-gray-900">
-                                {currentSubscription ? SUBSCRIPTION_PLANS[currentSubscription.plan_type].label : 'Nenhum'}
+                                {currentSubscription ? plans[currentSubscription.plan_type as PlanType]?.label : 'Nenhum'}
                             </h3>
                         </div>
                         <CheckCircle className="w-8 h-8 text-blue-100" />
@@ -274,8 +285,8 @@ Aguardo o código de activação. Obrigado!`;
                             <div className="space-y-4">
                                 <label className="block text-sm font-medium text-gray-700">1. Escolha o Plano</label>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {(Object.keys(SUBSCRIPTION_PLANS) as PlanType[]).map((type) => {
-                                        const plan = SUBSCRIPTION_PLANS[type];
+                                    {(Object.keys(plans) as PlanType[]).map((type) => {
+                                        const plan = plans[type];
                                         return (
                                             <div
                                                 key={type}
@@ -418,7 +429,7 @@ Aguardo o código de activação. Obrigado!`;
                             </div>
                             <h3 className="text-xl font-bold text-green-800 mb-2">Assinatura Activada com Sucesso!</h3>
                             <p className="text-green-700 mb-6">
-                                O seu plano <strong>{SUBSCRIPTION_PLANS[selectedPlan].label}</strong> está activo e pronto a usar.
+                                O seu plano <strong>{plans[selectedPlan].label}</strong> está activo e pronto a usar.
                             </p>
                             <Button
                                 variant="primary"

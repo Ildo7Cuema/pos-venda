@@ -12,10 +12,11 @@ import UsersManagement from '@/components/settings/UsersManagement';
 import SaftExport from '@/components/saft/SaftExport';
 import SubscriptionSettings from '@/components/settings/SubscriptionSettings';
 import ActivationManager from '@/components/settings/ActivationManager';
-import { Building, User, Printer, Database, Layers, HardDrive, FileCode, Users, CreditCard, Key } from 'lucide-react';
+import PlanPricingSettings from '@/components/settings/PlanPricingSettings';
+import { Building, User, Printer, Database, Layers, HardDrive, FileCode, Users, CreditCard, Key, Tag } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 
-type SettingsTab = 'organization' | 'subscription' | 'activations' | 'categories' | 'users' | 'user' | 'printer' | 'database' | 'system' | 'compliance';
+type SettingsTab = 'organization' | 'subscription' | 'activations' | 'plan-pricing' | 'categories' | 'users' | 'user' | 'printer' | 'database' | 'system' | 'compliance';
 
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState<SettingsTab>('organization');
@@ -28,6 +29,7 @@ export default function SettingsPage() {
         { id: 'organization', label: 'Organização', icon: Building },
         { id: 'subscription', label: 'Assinatura', icon: CreditCard },
         { id: 'activations', label: 'Activações', icon: Key, superAdminOnly: true },
+        { id: 'plan-pricing', label: 'Preços Licenças', icon: Tag, superAdminOnly: true },
         { id: 'categories', label: 'Categorias', icon: Layers },
         { id: 'users', label: 'Utilizadores', icon: Users, adminOnly: true },
         { id: 'user', label: 'Meu Perfil', icon: User },
@@ -77,6 +79,7 @@ export default function SettingsPage() {
                     {activeTab === 'organization' && <OrganizationSettings />}
                     {activeTab === 'subscription' && <SubscriptionSettings />}
                     {activeTab === 'activations' && isSuperAdmin && <ActivationManager />}
+                    {activeTab === 'plan-pricing' && isSuperAdmin && <PlanPricingSettings />}
                     {activeTab === 'categories' && <CategorySettings />}
                     {activeTab === 'users' && isAdmin && <UsersManagement />}
                     {activeTab === 'user' && <UserSettings />}

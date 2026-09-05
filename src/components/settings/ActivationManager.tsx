@@ -17,11 +17,11 @@ import {
 import db from '@/lib/db/sqlite';
 import {
     generateActivationCode,
-    SUBSCRIPTION_PLANS,
     PAYMENT_INFO,
     formatCurrency,
     type PlanType
 } from '@/lib/subscription/activationService';
+import { loadSubscriptionPlans } from '@/lib/subscription/planPricing';
 
 interface SubscriptionRequest {
     id: string;
@@ -42,8 +42,10 @@ const ActivationManager: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [generatedCode, setGeneratedCode] = useState<{ [key: string]: string }>({});
     const [copiedId, setCopiedId] = useState<string | null>(null);
+    const [plans, setPlans] = useState(() => loadSubscriptionPlans());
 
     useEffect(() => {
+        setPlans(loadSubscriptionPlans());
         loadRequests();
     }, []);
 
@@ -109,7 +111,7 @@ const ActivationManager: React.FC = () => {
 Olá! O seu pagamento foi confirmado.
 
 📌 Referência: *${request.reference_code}*
-📦 Plano: ${SUBSCRIPTION_PLANS[request.plan_type]?.label}
+📦 Plano: ${plans[request.plan_type]?.label}
 
 🔑 *Código de Activação:*
 \`${code}\`
@@ -198,7 +200,7 @@ Obrigado por escolher o KAMBA POS!`;
                                     </div>
                                     <div className="text-sm text-gray-600 space-y-1">
                                         <p><strong>Organização:</strong> {request.org_name || 'N/A'}</p>
-                                        <p><strong>Plano:</strong> {SUBSCRIPTION_PLANS[request.plan_type]?.label} - {formatCurrency(request.amount)}</p>
+                                        <p><strong>Plano:</strong> {plans[request.plan_type]?.label} - {formatCurrency(request.amount)}</p>
                                         <p><strong>Solicitado:</strong> {new Date(request.requested_at).toLocaleString('pt-AO')}</p>
                                     </div>
                                 </div>

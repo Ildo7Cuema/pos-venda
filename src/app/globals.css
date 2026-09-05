@@ -491,6 +491,124 @@ a {
 }
 
 /* ============================================
+   LOGIN SALES BACKGROUND ANIMATIONS
+   ============================================ */
+
+@keyframes sales-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+    opacity: 0.16;
+  }
+  50% {
+    transform: translateY(-18px) rotate(4deg);
+    opacity: 0.28;
+  }
+}
+
+@keyframes sales-float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(3deg);
+    opacity: 0.12;
+  }
+  50% {
+    transform: translateY(-28px) rotate(-3deg);
+    opacity: 0.24;
+  }
+}
+
+@keyframes sales-rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-100vh) scale(0.4);
+    opacity: 0;
+  }
+}
+
+@keyframes sales-aurora {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.08);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes sales-chart-draw {
+  0% {
+    opacity: 0.35;
+    transform: translateY(12px);
+  }
+  50% {
+    opacity: 0.55;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0.35;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes sales-bar {
+  0%,
+  100% {
+    transform: scaleY(0.72);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 0.7;
+  }
+}
+
+.animate-sales-float {
+  animation: sales-float 7s ease-in-out infinite;
+}
+
+.animate-sales-float-slow {
+  animation: sales-float-slow 10s ease-in-out infinite;
+}
+
+.animate-sales-rise {
+  animation: sales-rise linear infinite;
+}
+
+.animate-sales-aurora {
+  animation: sales-aurora 28s linear infinite;
+}
+
+.animate-sales-chart-draw {
+  animation: sales-chart-draw 8s ease-in-out infinite;
+}
+
+.animate-sales-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: sales-bar 3.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sales-float,
+  .animate-sales-float-slow,
+  .animate-sales-rise,
+  .animate-sales-aurora,
+  .animate-sales-chart-draw,
+  .animate-sales-bar {
+    animation: none !important;
+  }
+}
+
+/* ============================================
    RESPONSIVE UTILITIES
    ============================================ */
 

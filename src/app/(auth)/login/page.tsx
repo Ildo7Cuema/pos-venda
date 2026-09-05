@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { Input, Button, Alert } from '@/components/ui';
+import SalesBackground from '@/components/auth/SalesBackground';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -44,17 +45,23 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center p-4">
-            <div className="w-full max-w-md">
+        <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
+            <SalesBackground />
+
+            <div className="relative z-10 w-full max-w-md">
                 {/* Logo and Title */}
                 <div className="text-center mb-8">
-                    <img src="/logo.png" alt="KAMBA Many" className="w-20 h-20 mx-auto mb-4 rounded-2xl" />
+                    <img
+                        src="/logo.png"
+                        alt="KAMBA Many"
+                        className="w-20 h-20 mx-auto mb-4 rounded-2xl shadow-md shadow-black/10"
+                    />
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">KAMBA Many</h1>
                     <p className="text-gray-600">O Amigo do Seu Negócio</p>
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
+                <div className="bg-white/90 backdrop-blur-md rounded-xl shadow-xl shadow-slate-200/80 p-8 border border-white/80">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6">Entrar</h2>
 
                     {error && (
@@ -135,7 +142,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Footer */}
-                <div className="text-center mt-6 text-sm text-gray-600">
+                <div className="text-center mt-6 text-sm text-gray-500">
                     <p>Desenvolvido para Angola 🇦🇴</p>
                     <p className="mt-2">
                         Conforme Decreto 74/19 e 71/25

@@ -83,9 +83,9 @@ const ReportFilters: React.FC<ReportFiltersProps> = ({
                         Atualizar
                     </Button>
                     {onExport && (
-                        <Button variant="outline" onClick={onExport}>
+                        <Button variant="outline" onClick={onExport} disabled={isLoading}>
                             <Download className="w-4 h-4 mr-2" />
-                            Exportar
+                            Exportar Excel
                         </Button>
                     )}
                 </div>
