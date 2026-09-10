@@ -33,6 +33,16 @@ CREATE TABLE IF NOT EXISTS users (
     FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE
 );
 
+-- Tabela de Reset de Password
+CREATE TABLE IF NOT EXISTS password_resets (
+    id TEXT PRIMARY KEY, -- Token
+    user_id TEXT NOT NULL,
+    email TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Tabela de Assinaturas/Licenças
 CREATE TABLE IF NOT EXISTS subscriptions (
     id TEXT PRIMARY KEY,
@@ -46,6 +56,27 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE
+);
+
+-- Tabela de Pedidos de Assinatura/Activação
+CREATE TABLE IF NOT EXISTS subscription_requests (
+    id TEXT PRIMARY KEY,
+    organization_id TEXT NOT NULL,
+    plan_type TEXT NOT NULL CHECK (plan_type IN ('MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL')),
+    payment_method TEXT NOT NULL CHECK (payment_method IN ('TRANSFERENCIA', 'MULTICAIXA_EXPRESS')),
+    reference_code TEXT UNIQUE NOT NULL,
+    activation_code_hash TEXT,
+    amount REAL NOT NULL,
+    status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'ACTIVATED', 'REJECTED', 'EXPIRED')),
+    requested_at TEXT DEFAULT (datetime('now')),
+    activated_at TEXT,
+    activated_by TEXT,
+    subscription_id TEXT,
+    customer_phone TEXT, -- Telefone para envio do código
+    admin_notes TEXT,    -- Notas internas do admin
+    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE,
+    FOREIGN KEY (activated_by) REFERENCES users(id),
+    FOREIGN KEY (subscription_id) REFERENCES subscriptions(id)
 );
 
 -- Tabela de Categorias de Produtos
@@ -74,6 +105,8 @@ CREATE TABLE IF NOT EXISTS products (
     unit_price REAL NOT NULL CHECK (unit_price >= 0),
     cost_price REAL DEFAULT 0 CHECK (cost_price >= 0),
     tax_rate REAL DEFAULT 14.0 CHECK (tax_rate >= 0 AND tax_rate <= 100),
+    tax_exemption_code TEXT, -- Motivo de isenção (M00, M10, etc)
+    tax_exemption_reason TEXT, -- Descrição do motivo
     unit_type TEXT DEFAULT 'UNIDADE',
     current_stock REAL DEFAULT 0 CHECK (current_stock >= 0),
     min_stock REAL DEFAULT 0,
@@ -104,24 +137,6 @@ CREATE TABLE IF NOT EXISTS stock_movements (
     FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
--- Tabela de Clientes
-CREATE TABLE IF NOT EXISTS customers (
-    id TEXT PRIMARY KEY,
-    organization_id TEXT NOT NULL,
-    name TEXT NOT NULL,
-    nif TEXT,
-    email TEXT,
-    phone TEXT,
-    address TEXT,
-    notes TEXT,
-    is_active INTEGER DEFAULT 1,
-    total_purchases REAL DEFAULT 0,
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE,
-    UNIQUE(organization_id, nif)
 );
 
 -- Tabela de Vendas (POS)
@@ -173,7 +188,7 @@ CREATE TABLE IF NOT EXISTS invoices (
     id TEXT PRIMARY KEY,
     organization_id TEXT NOT NULL,
     sale_id TEXT,
-    source_id TEXT, -- AGT Source ID (User Login)
+    source_id TEXT, -- ID do documento de origem (para Notas de Crédito/Débito)
     
     -- Tipo de Documento
     document_type TEXT NOT NULL CHECK (
@@ -195,7 +210,7 @@ CREATE TABLE IF NOT EXISTS invoices (
     
     -- Datas
     issue_date TEXT NOT NULL DEFAULT (datetime('now')),
-    system_entry_date TEXT NOT NULL DEFAULT (datetime('now')), -- AGT System Entry Date
+    system_entry_date TEXT NOT NULL DEFAULT (datetime('now')), -- Data de gravação no sistema (crítico para SAF-T)
     due_date TEXT,
     tax_date TEXT NOT NULL DEFAULT (date('now')),
     
@@ -214,7 +229,7 @@ CREATE TABLE IF NOT EXISTS invoices (
     
     -- Informações Fiscais (apenas para documentos fiscais)
     hash TEXT,
-    hash_control TEXT, -- AGT Hash Control
+    hash_control TEXT, -- Versão da chave privada (ex: '1')
     qr_code TEXT,
     atcud TEXT,  -- Código Único do Documento
     saft_export_date TEXT,
@@ -252,26 +267,14 @@ CREATE TABLE IF NOT EXISTS invoice_items (
     quantity REAL NOT NULL CHECK (quantity > 0),
     unit_price REAL NOT NULL CHECK (unit_price >= 0),
     tax_rate REAL NOT NULL CHECK (tax_rate >= 0 AND tax_rate <= 100),
+    tax_exemption_code TEXT,
+    tax_exemption_reason TEXT,
     tax_amount REAL NOT NULL CHECK (tax_amount >= 0),
     discount_amount REAL DEFAULT 0 CHECK (discount_amount >= 0),
     line_total REAL NOT NULL CHECK (line_total >= 0),
     created_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
-);
-
--- Tabela de Notificações (NOVA)
-CREATE TABLE IF NOT EXISTS notifications (
-    id TEXT PRIMARY KEY,
-    organization_id TEXT,
-    user_id TEXT,
-    title TEXT NOT NULL,
-    message TEXT NOT NULL,
-    type TEXT NOT NULL CHECK (type IN ('info', 'warning', 'success', 'error')),
-    is_read INTEGER DEFAULT 0,
-    created_at TEXT DEFAULT (datetime('now')),
-    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Tabela de Logs de Auditoria
@@ -359,9 +362,6 @@ CREATE INDEX IF NOT EXISTS idx_invoices_customer_nif ON invoices(customer_nif);
 CREATE INDEX IF NOT EXISTS idx_invoices_sync ON invoices(is_synced);
 
 CREATE INDEX IF NOT EXISTS idx_invoice_items_invoice ON invoice_items(invoice_id);
-
-CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
-CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(is_read);
 
 CREATE INDEX IF NOT EXISTS idx_audit_logs_entity ON audit_logs(entity_type, entity_id);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_date ON audit_logs(created_at);

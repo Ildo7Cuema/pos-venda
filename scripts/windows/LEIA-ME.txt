@@ -1,0 +1,39 @@
+KAMBA Many - Instalacao no Windows
+==================================
+
+Este pacote instala o sistema de Ponto de Venda neste computador
+e coloca um icone no Ambiente de Trabalho.
+
+COMO INSTALAR
+-------------
+1. Copie esta pasta inteira para o computador do cliente (USB, ZIP, etc.).
+2. Abra a pasta e faça duplo clique em INSTALAR.bat.
+3. No Ambiente de Trabalho aparece o icone "KAMBA POS".
+4. Clique no icone para abrir o sistema no navegador.
+
+ONDE FICA INSTALADO
+-------------------
+Normalmente: C:\KambaPOS
+Se nao houver permissao: %LOCALAPPDATA%\KambaPOS
+
+COMO USAR
+---------
+- Clique no icone "KAMBA POS" no Ambiente de Trabalho.
+- O navegador abre em http://127.0.0.1:3000/
+- Nao feche a janela do servidor enquanto estiver a usar o POS.
+- Para sair: feche o navegador e, se quiser parar o servidor,
+  use "Parar KAMBA POS" no Menu Iniciar ou parar.bat.
+
+DADOS
+-----
+Os dados (produtos, stock, facturas) ficam no navegador deste Windows
+(utilizador). Nao copie so o atalho para outro PC: instale o pacote
+completo e volte a configurar a empresa nesse computador.
+
+DESINSTALAR
+-----------
+Execute DESINSTALAR.bat na pasta de instalacao.
+
+SUPORTE
+-------
+ildocuema@gmail.com

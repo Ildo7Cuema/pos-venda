@@ -1,17 +1,44 @@
 # Guia de Instalação e Produção - KAMBA POS Angola
 
-Este guia detalha os passos para instalar e executar o sistema KAMBA POS em um ambiente de produção (computador do cliente).
+Este guia detalha os passos para instalar e executar o sistema KAMBA POS no computador do cliente.
 
-## Pré-requisitos
+## Instalação rápida no Windows (recomendado)
 
-O computador do cliente deve ter os seguintes softwares instalados:
+O caminho mais simples: criar um instalador nesta máquina e levá-lo noutro computador (USB, ZIP, partilha). No cliente, um duplo clique instala o programa e coloca o ícone **KAMBA POS** no Ambiente de Trabalho.
 
-1.  **Node.js**: Versão 18 ou superior (Recomendado v20 LTS).
+### 1. Nesta máquina (desenvolvimento)
+
+1. Feche o servidor de desenvolvimento se estiver a correr.
+2. Faça duplo clique em `EMPACOTAR.bat` (ou execute `npm run pack:windows`).
+3. Aguarde o fim da compilação. O Windows abre a pasta `dist`.
+4. Copie **`KambaPOS-Instalador.zip`** (ou a pasta `KambaPOS-Instalador`) para uma pen USB.
+
+O pacote já inclui um Node.js portátil: o computador do cliente **não precisa** de instalar Node.js nem Git.
+
+### 2. No computador do cliente
+
+1. Extraia o ZIP.
+2. Faça duplo clique em `INSTALAR.bat`.
+3. No Ambiente de Trabalho aparece o ícone **KAMBA POS**.
+4. Clique no ícone: o sistema abre no navegador em `http://127.0.0.1:3000/`.
+
+A instalação prefere `C:\KambaPOS`. Se não houver permissão de escrita, usa `%LOCALAPPDATA%\KambaPOS`.
+
+**Importante:** enquanto o POS estiver aberto, não feche a janela do servidor (fica minimizada na barra de tarefas). Para parar, use **Parar KAMBA POS** no Menu Iniciar.
+
+Os dados (produtos, stock, facturas) ficam no navegador daquele Windows. Instalar noutro PC não copia automaticamente essas vendas.
+
+---
+
+## Pré-requisitos (só se não usar o instalador Windows)
+
+O computador do cliente deve ter:
+
+1.  **Node.js**: Versão 20 ou superior (LTS).
     *   Download: [https://nodejs.org/](https://nodejs.org/)
-2.  **Git**: Para baixar e atualizar o código (Opcional se for copiar os arquivos manualmente).
-    *   Download: [https://git-scm.com/](https://git-scm.com/)
+2.  **Git**: Opcional, apenas se for clonar o código em vez de copiar a pasta.
 
-## 1. Obter o Código Fonte
+## 1. Obter o Código Fonte (instalação manual)
 
 Clone o repositório ou extraia o arquivo ZIP do projeto em uma pasta no computador do cliente, por exemplo em `C:\KambaPOS` ou `/opt/kambapos`.
 
@@ -41,7 +68,9 @@ AGT_PRIVATE_KEY_B64=sua_chave_privada_base64
 
 > **NOTA:** A chave privada da AGT é crítica para a validação fiscal. Mantenha-a segura.
 
-## 3. Instalação e Build
+No pacote Windows, as mesmas variáveis podem ir em `config.env` na pasta de instalação. Variáveis `NEXT_PUBLIC_*` só entram no programa se existirem **no momento do** `EMPACOTAR.bat`.
+
+## 3. Instalação e Build (manual)
 
 Abra o terminal na pasta do projeto e execute os seguintes comandos:
 
@@ -55,7 +84,7 @@ npm run build
 
 Este processo pode levar alguns minutos. Se ocorrerem erros, verifique se todas as dependências do sistema estão instaladas.
 
-## 4. Executando em Produção
+## 4. Executando em Produção (manual)
 
 Para iniciar o sistema, execute:
 
@@ -65,8 +94,7 @@ npm start
 
 O sistema estará acessível em: `http://localhost:3000`
 
-### Script de Inicialização Rápida
-Para facilitar, você pode usar o script `scripts/start-prod.sh` (em Linux/Mac) ou criar um atalho no Windows que execute `npm start`.
+No Windows, prefira o ícone criado pelo `INSTALAR.bat`. Em Linux/Mac pode usar `scripts/start-prod.sh`.
 
 ## 5. Ativação do Sistema
 

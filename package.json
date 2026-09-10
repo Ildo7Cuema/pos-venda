@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pack:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pack-windows.ps1"
   },
   "browser": {
     "fs": false

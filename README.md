@@ -81,7 +81,7 @@ Sistema completo de Ponto de Venda (POS), Gestão de Stock e Facturação Eletr�
 - Node.js 18+ e npm
 - (Opcional) Conta Supabase para sincronização online
 
-> **Para instalação em Produção no cliente, veja: [INSTALL.md](INSTALL.md)**
+> **Para levar o sistema a outro PC Windows** (ícone no Ambiente de Trabalho): execute `EMPACOTAR.bat`, copie `dist\KambaPOS-Instalador.zip` e no cliente execute `INSTALAR.bat`. Detalhes em [INSTALL.md](INSTALL.md).
 
 
 ### Instalação

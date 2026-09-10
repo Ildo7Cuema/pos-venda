@@ -19,6 +19,8 @@
 
 # production
 /build
+/dist
+/scripts/windows/runtime-cache
 
 # misc
 .DS_Store

@@ -120,8 +120,13 @@ export default function ForgotPasswordPage() {
                         <p>Não recebeu o email? Verifique sua pasta de spam.</p>
                         <p className="mt-2">
                             Precisa de ajuda? Entre em contato:{' '}
-                            <a href="mailto:ildocuema@gmail.com" className="text-[var(--primary)] hover:underline">
-                                ildocuema@gmail.com
+                            <a
+                                href="https://wa.me/244921923232"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[var(--primary)] hover:underline"
+                            >
+                                +244 921 92 32 32
                             </a>
                         </p>
                     </div>

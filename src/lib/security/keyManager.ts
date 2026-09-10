@@ -56,16 +56,9 @@ export function getPrivateKey(): string {
         return envKeyDirect;
     }
 
-    // 3. Fallback para chave de demonstração (APENAS DESENVOLVIMENTO)
-    if (process.env.NODE_ENV === 'development') {
-        console.warn('[KeyManager] ⚠️ Usando chave de demonstração. NÃO USAR EM PRODUÇÃO!');
-        return DEMO_PRIVATE_KEY;
-    }
-
-    throw new Error(
-        'Chave privada AGT não configurada. ' +
-        'Defina a variável de ambiente AGT_PRIVATE_KEY_B64 ou AGT_PRIVATE_KEY.'
-    );
+    // 3. Fallback para chave de demonstração (assinatura corre no browser)
+    console.warn('[KeyManager] A usar chave de demonstração. Configure AGT_PRIVATE_KEY_B64 para produção fiscal.');
+    return DEMO_PRIVATE_KEY;
 }
 
 /**

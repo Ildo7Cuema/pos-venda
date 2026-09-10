@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import db from '@/lib/db/sqlite';
 import Spinner from '@/components/ui/Spinner';
 
@@ -8,9 +9,15 @@ interface DatabaseProviderProps {
     children: React.ReactNode;
 }
 
+function isPublicDocsRoute(pathname: string | null): boolean {
+    return pathname === '/docs' || Boolean(pathname?.startsWith('/docs/'));
+}
+
 export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) => {
+    const pathname = usePathname();
     const [isInitialized, setIsInitialized] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const skipBlockingLoader = isPublicDocsRoute(pathname);
 
     useEffect(() => {
         const initDB = async () => {
@@ -28,7 +35,7 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) 
         }
     }, [isInitialized]);
 
-    if (error) {
+    if (error && !skipBlockingLoader) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
                 <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
@@ -45,7 +52,7 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) 
         );
     }
 
-    if (!isInitialized) {
+    if (!isInitialized && !skipBlockingLoader) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
                 <Spinner size="lg" />
