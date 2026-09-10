@@ -103,6 +103,11 @@ Copy-Item (Join-Path $WindowsScripts 'parar.bat') (Join-Path $AppDir 'parar.bat'
 Copy-Item (Join-Path $WindowsScripts 'criar-atalho.ps1') (Join-Path $AppDir 'criar-atalho.ps1') -Force
 Copy-Item (Join-Path $WindowsScripts 'config.env.example') (Join-Path $AppDir 'config.env.example') -Force
 
+$iconScript = Join-Path $WindowsScripts 'generate-ico.ps1'
+if (Test-Path $iconScript) {
+    & powershell -NoProfile -ExecutionPolicy Bypass -File $iconScript
+}
+
 $assetsDest = Join-Path $AppDir 'assets'
 New-Item -ItemType Directory -Force -Path $assetsDest | Out-Null
 Copy-Item (Join-Path $WindowsScripts 'assets\kamba.ico') (Join-Path $assetsDest 'kamba.ico') -Force
@@ -165,5 +170,5 @@ Write-Host "  Pasta: $Stage"
 Write-Host "  ZIP:   $zipPath  ($sizeMb MB)"
 Write-Host ""
 Write-Host "No outro computador: extraia o ZIP e execute INSTALAR.bat"
-Write-Host "O icone KAMBA POS fica no Ambiente de Trabalho."
+Write-Host "O icone KAMBA Many fica no Ambiente de Trabalho."
 Write-Host ""

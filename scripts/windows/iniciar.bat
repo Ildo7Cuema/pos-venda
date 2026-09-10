@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
 cd /d "%~dp0"
-title KAMBA POS - Nao feche esta janela
+title KAMBA Many - Nao feche esta janela
 chcp 65001 >nul
 
 set "NODE_ENV=production"

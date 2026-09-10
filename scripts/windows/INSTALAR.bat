@@ -51,13 +51,13 @@ if errorlevel 1 (
 
 echo.
 echo  Instalacao concluida.
-echo  Icone "KAMBA POS" colocado no Ambiente de Trabalho.
+echo  Icone "KAMBA Many" colocado no Ambiente de Trabalho.
 echo.
 echo  Ao clicar no icone, o sistema abre no navegador.
 echo  Nao feche a janela do servidor enquanto estiver a vender.
 echo.
 
-choice /C SN /M "Deseja abrir o KAMBA POS agora"
+choice /C SN /M "Deseja abrir o KAMBA Many agora"
 if errorlevel 2 goto :end
 if errorlevel 1 start "" "%INSTALL_DIR%\iniciar.bat"
 

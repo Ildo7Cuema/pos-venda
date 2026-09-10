@@ -16,9 +16,9 @@ if exist "%~dp0parar.bat" call "%~dp0parar.bat"
 set "INSTALL_DIR=%~dp0"
 if "%INSTALL_DIR:~-1%"=="\" set "INSTALL_DIR=%INSTALL_DIR:~0,-1%"
 
-del /f /q "%USERPROFILE%\Desktop\KAMBA POS.lnk" >nul 2>&1
-powershell -NoProfile -Command "try { Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path ([Environment]::GetFolderPath('Desktop')) 'KAMBA POS.lnk') } catch {}"
+powershell -NoProfile -Command "try { $d = [Environment]::GetFolderPath('Desktop'); Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $d 'KAMBA POS.lnk'), (Join-Path $d 'KAMBA Many.lnk') } catch {}"
 rmdir /s /q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\KAMBA POS" >nul 2>&1
+rmdir /s /q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\KAMBA Many" >nul 2>&1
 
 echo.
 echo  Atalhos removidos. A pasta do programa sera apagada dentro de segundos.

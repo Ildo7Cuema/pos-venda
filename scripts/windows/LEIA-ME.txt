@@ -8,7 +8,7 @@ COMO INSTALAR
 -------------
 1. Copie esta pasta inteira para o computador do cliente (USB, ZIP, etc.).
 2. Abra a pasta e faça duplo clique em INSTALAR.bat.
-3. No Ambiente de Trabalho aparece o icone "KAMBA POS".
+3. No Ambiente de Trabalho aparece o icone "KAMBA Many".
 4. Clique no icone para abrir o sistema no navegador.
 
 ONDE FICA INSTALADO
@@ -18,11 +18,11 @@ Se nao houver permissao: %LOCALAPPDATA%\KambaPOS
 
 COMO USAR
 ---------
-- Clique no icone "KAMBA POS" no Ambiente de Trabalho.
+- Clique no icone "KAMBA Many" no Ambiente de Trabalho.
 - O navegador abre em http://127.0.0.1:3000/
 - Nao feche a janela do servidor enquanto estiver a usar o POS.
 - Para sair: feche o navegador e, se quiser parar o servidor,
-  use "Parar KAMBA POS" no Menu Iniciar ou parar.bat.
+  use "Parar KAMBA Many" no Menu Iniciar ou parar.bat.
 
 DADOS
 -----
