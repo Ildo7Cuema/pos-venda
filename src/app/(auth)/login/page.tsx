@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { Input, Button, Alert } from '@/components/ui';
 import SalesBackground from '@/components/auth/SalesBackground';
+import StoreAdminSetupForm from '@/components/auth/StoreAdminSetupForm';
+import { needsStoreAdminSetup } from '@/lib/setup/initialSetup';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -15,6 +17,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [showDemoCreds, setShowDemoCreds] = useState(false);
+    const [needsSetup, setNeedsSetup] = useState(false);
+    const [mode, setMode] = useState<'login' | 'setup'>('login');
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     useEffect(() => {
@@ -22,6 +26,18 @@ export default function LoginPage() {
         const shouldHide = localStorage.getItem('kamba_hide_demo_creds');
         if (!shouldHide) {
             setShowDemoCreds(true);
+        }
+    }, [isDevelopment]);
+
+    useEffect(() => {
+        try {
+            const needed = needsStoreAdminSetup();
+            setNeedsSetup(needed);
+            if (!isDevelopment && needed) {
+                setMode('setup');
+            }
+        } catch (err) {
+            console.error('Falha ao verificar cadastro inicial:', err);
         }
     }, [isDevelopment]);
 
@@ -37,7 +53,6 @@ export default function LoginPage() {
 
         try {
             await login(email, password);
-            // Hide demo creds on successful login
             localStorage.setItem('kamba_hide_demo_creds', 'true');
             router.push('/dashboard');
         } catch (err) {
@@ -45,12 +60,16 @@ export default function LoginPage() {
         }
     };
 
+    const handleSetupSuccess = async (createdEmail: string, createdPassword: string) => {
+        await login(createdEmail, createdPassword);
+        router.push('/dashboard');
+    };
+
     return (
         <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
             <SalesBackground />
 
-            <div className="relative z-10 w-full max-w-md">
-                {/* Logo and Title */}
+            <div className={`relative z-10 w-full ${mode === 'setup' ? 'max-w-lg' : 'max-w-md'}`}>
                 <div className="text-center mb-8">
                     <img
                         src="/logo.png"
@@ -61,88 +80,107 @@ export default function LoginPage() {
                     <p className="text-gray-600">O Amigo do Seu Negócio</p>
                 </div>
 
-                {/* Login Card */}
                 <div className="bg-white/90 backdrop-blur-md rounded-xl shadow-xl shadow-slate-200/80 p-8 border border-white/80">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Entrar</h2>
-
-                    {error && (
-                        <Alert variant="error" className="mb-4">
-                            {error}
-                        </Alert>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <Input
-                            type="email"
-                            label="Email"
-                            placeholder="seu@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            leftIcon={
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                                </svg>
-                            }
+                    {mode === 'setup' ? (
+                        <StoreAdminSetupForm
+                            onSuccess={handleSetupSuccess}
+                            onGoToLogin={() => setMode('login')}
                         />
+                    ) : (
+                        <>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Entrar</h2>
 
-                        <Input
-                            type="password"
-                            label="Password"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            leftIcon={
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                            }
-                        />
+                            {error && (
+                                <Alert variant="error" className="mb-4">
+                                    {error}
+                                </Alert>
+                            )}
 
-                        <div className="flex items-center justify-between text-sm">
-                            <label className="flex items-center gap-2">
-                                <input type="checkbox" className="rounded" />
-                                <span className="text-gray-600">Lembrar-me</span>
-                            </label>
-                            <Link href="/forgot-password" className="text-[var(--primary)] hover:underline">
-                                Esqueci a senha
-                            </Link>
-                        </div>
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <Input
+                                    type="email"
+                                    label="Email"
+                                    placeholder="seu@email.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    leftIcon={
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                                        </svg>
+                                    }
+                                />
 
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            className="w-full"
-                            size="lg"
-                            isLoading={isLoading}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? 'Entrando...' : 'Entrar'}
-                        </Button>
-                    </form>
+                                <Input
+                                    type="password"
+                                    label="Password"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    leftIcon={
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                        </svg>
+                                    }
+                                />
 
-                    {/* Credenciais de teste: apenas em desenvolvimento, nunca no pacote de produção */}
-                    {isDevelopment && showDemoCreds && (
-                        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200 relative group">
-                            <button
-                                onClick={() => {
-                                    setShowDemoCreds(false);
-                                    localStorage.setItem('kamba_hide_demo_creds', 'true');
-                                }}
-                                className="absolute top-2 right-2 text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                                title="Ocultar para sempre"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                            <p className="text-sm text-blue-800 font-medium mb-2">💡 Credenciais de Teste:</p>
-                            <p className="text-xs text-blue-700 font-mono">Email: ildocuema@gmail.com</p>
-                            <p className="text-xs text-blue-700 font-mono">Password: Ildo7..Marques</p>
-                        </div>
+                                <div className="flex items-center justify-between text-sm">
+                                    <label className="flex items-center gap-2">
+                                        <input type="checkbox" className="rounded" />
+                                        <span className="text-gray-600">Lembrar-me</span>
+                                    </label>
+                                    <Link href="/forgot-password" className="text-[var(--primary)] hover:underline">
+                                        Esqueci a senha
+                                    </Link>
+                                </div>
+
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    className="w-full"
+                                    size="lg"
+                                    isLoading={isLoading}
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? 'Entrando...' : 'Entrar'}
+                                </Button>
+                            </form>
+
+                            {needsSetup && (
+                                <p className="text-center text-sm text-gray-600 mt-6">
+                                    Primeiro acesso?{' '}
+                                    <button
+                                        type="button"
+                                        onClick={() => setMode('setup')}
+                                        className="text-[var(--primary)] hover:underline font-medium"
+                                    >
+                                        Cadastrar administrador da empresa
+                                    </button>
+                                </p>
+                            )}
+
+                            {isDevelopment && showDemoCreds && (
+                                <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200 relative group">
+                                    <button
+                                        onClick={() => {
+                                            setShowDemoCreds(false);
+                                            localStorage.setItem('kamba_hide_demo_creds', 'true');
+                                        }}
+                                        className="absolute top-2 right-2 text-blue-400 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        title="Ocultar para sempre"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    </button>
+                                    <p className="text-sm text-blue-800 font-medium mb-2">💡 Credenciais de Teste:</p>
+                                    <p className="text-xs text-blue-700 font-mono">Email: ildocuema@gmail.com</p>
+                                    <p className="text-xs text-blue-700 font-mono">Password: Ildo7..Marques</p>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
 
-                {/* Footer */}
                 <div className="text-center mt-6 text-sm text-gray-500">
                     <p>Desenvolvido para Angola 🇦🇴</p>
                     <p className="mt-2">
