@@ -15,14 +15,15 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [showDemoCreds, setShowDemoCreds] = useState(false);
+    const isDevelopment = process.env.NODE_ENV === 'development';
 
     useEffect(() => {
-        // Check if demo creds should be shown
+        if (!isDevelopment) return;
         const shouldHide = localStorage.getItem('kamba_hide_demo_creds');
         if (!shouldHide) {
             setShowDemoCreds(true);
         }
-    }, []);
+    }, [isDevelopment]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -121,8 +122,8 @@ export default function LoginPage() {
                         </Button>
                     </form>
 
-                    {/* Demo Credentials */}
-                    {showDemoCreds && (
+                    {/* Credenciais de teste: apenas em desenvolvimento, nunca no pacote de produção */}
+                    {isDevelopment && showDemoCreds && (
                         <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200 relative group">
                             <button
                                 onClick={() => {
