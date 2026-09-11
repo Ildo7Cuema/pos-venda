@@ -21,7 +21,7 @@ Set-Location $Root
 
 Write-Host ""
 Write-Host "============================================" -ForegroundColor Green
-Write-Host "  KAMBA Many - Empacotar para Windows" -ForegroundColor Green
+Write-Host "  KAMBA Money - Empacotar para Windows" -ForegroundColor Green
 Write-Host "============================================" -ForegroundColor Green
 
 if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
@@ -170,5 +170,5 @@ Write-Host "  Pasta: $Stage"
 Write-Host "  ZIP:   $zipPath  ($sizeMb MB)"
 Write-Host ""
 Write-Host "No outro computador: extraia o ZIP e execute INSTALAR.bat"
-Write-Host "O icone KAMBA Many fica no Ambiente de Trabalho."
+Write-Host "O icone KAMBA Money fica no Ambiente de Trabalho."
 Write-Host ""

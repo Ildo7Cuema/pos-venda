@@ -1,5 +1,5 @@
 /**
- * Invoice PDF Generator - Sistema KAMBA Many
+ * Invoice PDF Generator - Sistema KAMBA Money
  * Gera PDF da fatura usando renderização HTML para correspondência pixel-perfect
  * com a pré-visualização do sistema.
  * 
@@ -299,7 +299,7 @@ function generateInvoiceHTML(invoice: InvoiceWithItems, organization: Organizati
                         - Processado por programa validado nº 31.1/AGT20
                     ` : '<span style="font-weight: 700;">ESTE DOCUMENTO NÃO SERVE DE FACTURA</span>'}
                 </p>
-                <p style="margin: 2mm 0 0 0;">KAMBA Many - Software Certificado</p>
+                <p style="margin: 2mm 0 0 0;">KAMBA Money - Software Certificado</p>
                 ${invoice.hash ? `
                     <p style="font-size: 5pt; color: #d1d5db; word-break: break-all; max-width: 100mm; font-family: monospace; line-height: 1.3; margin: 1mm 0 0 0;">
                         Full Hash: ${invoice.hash}

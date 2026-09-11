@@ -1,6 +1,6 @@
 /**
  * Cart Store - Gestão do estado do carrinho
- * Sistema KAMBA Many
+ * Sistema KAMBA Money
  */
 
 import { create } from 'zustand';

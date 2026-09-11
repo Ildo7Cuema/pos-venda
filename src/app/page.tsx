@@ -34,9 +34,9 @@ export default function Home() {
       <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="KAMBA Many" className="w-10 h-10 rounded-lg" />
+            <img src="/logo.png" alt="KAMBA Money" className="w-10 h-10 rounded-lg" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">KAMBA Many</h1>
+              <h1 className="text-xl font-bold text-gray-900">KAMBA Money</h1>
               <p className="text-xs text-gray-500">O Amigo do Seu Negócio</p>
             </div>
           </div>
@@ -195,7 +195,7 @@ export default function Home() {
         <div className="container py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-sm text-gray-600">
-              © 2025 KAMBA Many. Desenvolvido para Angola 🇦🇴
+              © 2025 KAMBA Money. Desenvolvido para Angola 🇦🇴
             </div>
             <div className="flex items-center gap-6 text-sm text-gray-600">
               <a href="mailto:ildocuema@gmail.com" className="hover:text-[var(--primary)]">

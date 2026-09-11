@@ -4,7 +4,7 @@ Este guia detalha os passos para instalar e executar o sistema KAMBA POS no comp
 
 ## Instalação rápida no Windows (recomendado)
 
-O caminho mais simples: criar um instalador nesta máquina e levá-lo noutro computador (USB, ZIP, partilha). No cliente, um duplo clique instala o programa e coloca o ícone **KAMBA Many** no Ambiente de Trabalho.
+O caminho mais simples: criar um instalador nesta máquina e levá-lo noutro computador (USB, ZIP, partilha). No cliente, um duplo clique instala o programa e coloca o ícone **KAMBA Money** no Ambiente de Trabalho.
 
 ### 1. Nesta máquina (desenvolvimento)
 
@@ -19,12 +19,12 @@ O pacote já inclui um Node.js portátil: o computador do cliente **não precisa
 
 1. Extraia o ZIP.
 2. Faça duplo clique em `INSTALAR.bat`.
-3. No Ambiente de Trabalho aparece o ícone **KAMBA Many**.
+3. No Ambiente de Trabalho aparece o ícone **KAMBA Money**.
 4. Clique no ícone: o sistema abre no navegador em `http://127.0.0.1:3000/`.
 
 A instalação prefere `C:\KambaPOS`. Se não houver permissão de escrita, usa `%LOCALAPPDATA%\KambaPOS`.
 
-**Importante:** enquanto o POS estiver aberto, não feche a janela do servidor (fica minimizada na barra de tarefas). Para parar, use **Parar KAMBA Many** no Menu Iniciar.
+**Importante:** enquanto o POS estiver aberto, não feche a janela do servidor (fica minimizada na barra de tarefas). Para parar, use **Parar KAMBA Money** no Menu Iniciar.
 
 Os dados (produtos, stock, facturas) ficam no navegador daquele Windows. Instalar noutro PC não copia automaticamente essas vendas.
 

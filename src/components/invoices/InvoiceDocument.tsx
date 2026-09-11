@@ -339,7 +339,7 @@ const InvoiceDocument = forwardRef<HTMLDivElement, InvoiceDocumentProps>(
                                     <span style={{ fontWeight: 700 }}>ESTE DOCUMENTO NÃO SERVE DE FACTURA</span>
                                 )}
                             </p>
-                            <p style={{ marginTop: '2mm', margin: '2mm 0 0 0' }}>KAMBA Many - Software Certificado</p>
+                            <p style={{ marginTop: '2mm', margin: '2mm 0 0 0' }}>KAMBA Money - Software Certificado</p>
                             {invoice.hash && (
                                 <p
                                     style={{

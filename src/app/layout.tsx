@@ -4,7 +4,7 @@ import DatabaseProvider from "@/components/providers/DatabaseProvider";
 import InstallPrompt from "@/components/pwa/InstallPrompt";
 
 export const metadata: Metadata = {
-  title: "KAMBA Many - O Amigo do Seu Negócio",
+  title: "KAMBA Money - O Amigo do Seu Negócio",
   description: "Sistema completo de Ponto de Venda, Gestão de Stock e Facturação Eletrónica em conformidade com a legislação angolana",
   manifest: "/manifest.json",
   icons: {

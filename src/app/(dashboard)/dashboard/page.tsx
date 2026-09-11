@@ -126,7 +126,7 @@ export default function DashboardPage() {
                     Bem-vindo, {user?.name}!
                 </h1>
                 <p className="text-gray-600">
-                    Aqui está um resumo do seu sistema KAMBA Many
+                    Aqui está um resumo do seu sistema KAMBA Money
                 </p>
             </div>
 

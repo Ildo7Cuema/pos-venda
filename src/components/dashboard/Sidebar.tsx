@@ -132,9 +132,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     {/* Logo */}
                     <div className="p-6 border-b border-gray-200">
                         <div className="flex items-center gap-3">
-                            <img src="/logo.png" alt="KAMBA Many" className="w-10 h-10 rounded-lg" />
+                            <img src="/logo.png" alt="KAMBA Money" className="w-10 h-10 rounded-lg" />
                             <div>
-                                <h1 className="text-lg font-bold text-gray-900">KAMBA Many</h1>
+                                <h1 className="text-lg font-bold text-gray-900">KAMBA Money</h1>
                                 <p className="text-xs text-gray-500">v1.0.0</p>
                             </div>
                         </div>

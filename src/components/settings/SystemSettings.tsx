@@ -25,7 +25,7 @@ const SystemSettings: React.FC = () => {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `kamba-many-backup-${new Date().toISOString().split('T')[0]}.sqlite`;
+                a.download = `kamba-money-backup-${new Date().toISOString().split('T')[0]}.sqlite`;
                 a.click();
                 URL.revokeObjectURL(url);
                 toast.success('Backup Exportado', 'A base de dados foi exportada com sucesso.');

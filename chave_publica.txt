@@ -1,0 +1,18 @@
+KAMBA Money - Chave publica do sistema
+Sistema de Facturacao Electronica (Angola)
+Algoritmo: RSA 2048 bits
+Formato: PEM (SPKI)
+Data: 11 de Setembro de 2026
+
+Use este bloco no credenciamento AGT / validacao das facturas.
+Nao partilhe a chave privada correspondente.
+
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmEOsrygsM/YdXwR8/rNz
+nGwN70hoDGcMmErD/zQbuK+vIe944ifEc1C0tMi3Ff9Ra8VuBVNyspxVOuWrfeWe
+5WaXFAXiLQoJ5MtrzXwO45zbQB087Qw9SRurilM3L0Wr8Z7Oq2HJBeaQmANxT2bX
+5wEIdKgTCxq1gZh5WEfiZNRACXXVhf4aiM6JCZZsom76zKxHAMPXw2eOd4uaveif
+3A7nd8l2iaAhltDw4ceqgxOYoi0cnvzOgdEuBmTL7v/zQ66asRevrmuLNYHF/eyT
+DNbZ+rqs4BFKlNcqtQHGeNoKyQM0qzMMpLaTpwib4RnLtPNrLE8rXgaumDpVjgrk
+mwIDAQAB
+-----END PUBLIC KEY-----

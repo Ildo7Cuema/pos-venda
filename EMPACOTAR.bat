@@ -6,7 +6,7 @@ chcp 65001 >nul
 
 echo.
 echo  ============================================
-echo   KAMBA Many - Criar instalador Windows
+echo   KAMBA Money - Criar instalador Windows
 echo  ============================================
 echo.
 echo  Este passo corre nesta maquina de desenvolvimento.

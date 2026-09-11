@@ -1,4 +1,4 @@
-# 🤝 KAMBA Many
+# 🤝 KAMBA Money
 
 ## O Amigo do Seu Negócio
 
@@ -116,7 +116,7 @@ npm run dev
 ## 📁 Estrutura do Projeto
 
 ```
-kamba-many/
+kamba-money/
 ├── database/          # Schemas SQL
 ├── src/
 │   ├── app/          # Next.js Pages
@@ -167,7 +167,7 @@ kamba-many/
 
 **KAMBA** significa **"Amigo"** em Kimbundu, uma das línguas nacionais de Angola. O nome representa a nossa missão: ser o **amigo de confiança** dos comerciantes angolanos.
 
-**KAMBA Many** - *O Amigo do Seu Negócio* 🇦🇴
+**KAMBA Money** - *O Amigo do Seu Negócio* 🇦🇴
 
 ---
 

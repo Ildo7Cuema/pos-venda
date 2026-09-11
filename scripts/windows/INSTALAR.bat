@@ -6,7 +6,7 @@ chcp 65001 >nul
 
 echo.
 echo  ============================================
-echo   KAMBA Many - Instalacao no computador
+echo   KAMBA Money - Instalacao no computador
 echo  ============================================
 echo.
 
@@ -51,13 +51,13 @@ if errorlevel 1 (
 
 echo.
 echo  Instalacao concluida.
-echo  Icone "KAMBA Many" colocado no Ambiente de Trabalho.
+echo  Icone "KAMBA Money" colocado no Ambiente de Trabalho.
 echo.
 echo  Ao clicar no icone, o sistema abre no navegador.
 echo  Nao feche a janela do servidor enquanto estiver a vender.
 echo.
 
-choice /C SN /M "Deseja abrir o KAMBA Many agora"
+choice /C SN /M "Deseja abrir o KAMBA Money agora"
 if errorlevel 2 goto :end
 if errorlevel 1 start "" "%INSTALL_DIR%\iniciar.bat"
 

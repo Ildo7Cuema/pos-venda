@@ -1,4 +1,4 @@
-# Conformidade Legal - Sistema KAMBA Many
+# Conformidade Legal - Sistema KAMBA Money
 
 ## Legislação Aplicável
 
@@ -440,4 +440,4 @@ O sistema PREVINE:
 
 **Última Atualização**: Janeiro 2025  
 **Versão do Documento**: 1.0  
-**Responsável**: Sistema KAMBA Many
+**Responsável**: Sistema KAMBA Money

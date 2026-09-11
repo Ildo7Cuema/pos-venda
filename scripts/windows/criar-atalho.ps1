@@ -55,22 +55,26 @@ if (-not (Test-Path $icon)) {
 }
 
 $desktop = [Environment]::GetFolderPath('Desktop')
-$startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\KAMBA Many'
-$oldStartMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\KAMBA POS'
+$startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\KAMBA Money'
+$legacyMenus = @(
+    (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\KAMBA POS'),
+    (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\KAMBA Many')
+)
 
 Remove-KambaShortcut @(
     (Join-Path $desktop 'KAMBA POS.lnk'),
     (Join-Path $desktop 'KAMBA Many.lnk'),
-    (Join-Path $oldStartMenu 'KAMBA POS.lnk'),
-    (Join-Path $oldStartMenu 'Parar KAMBA POS.lnk')
+    (Join-Path $desktop 'KAMBA Money.lnk')
 )
-if (Test-Path $oldStartMenu) {
-    Remove-Item -LiteralPath $oldStartMenu -Recurse -Force -ErrorAction SilentlyContinue
+foreach ($legacy in $legacyMenus) {
+    if (Test-Path $legacy) {
+        Remove-Item -LiteralPath $legacy -Recurse -Force -ErrorAction SilentlyContinue
+    }
 }
 
-$description = 'KAMBA Many - Ponto de Venda e Facturacao'
-New-KambaShortcut -Path (Join-Path $desktop 'KAMBA Many.lnk') -LaunchFile $startFile -WorkDir $InstallDir -Icon $icon -Description $description
-New-KambaShortcut -Path (Join-Path $startMenu 'KAMBA Many.lnk') -LaunchFile $startFile -WorkDir $InstallDir -Icon $icon -Description $description
-New-KambaShortcut -Path (Join-Path $startMenu 'Parar KAMBA Many.lnk') -LaunchFile $stopFile -WorkDir $InstallDir -Icon $icon -Description 'Parar o servidor KAMBA Many'
+$description = 'KAMBA Money - Ponto de Venda e Facturacao'
+New-KambaShortcut -Path (Join-Path $desktop 'KAMBA Money.lnk') -LaunchFile $startFile -WorkDir $InstallDir -Icon $icon -Description $description
+New-KambaShortcut -Path (Join-Path $startMenu 'KAMBA Money.lnk') -LaunchFile $startFile -WorkDir $InstallDir -Icon $icon -Description $description
+New-KambaShortcut -Path (Join-Path $startMenu 'Parar KAMBA Money.lnk') -LaunchFile $stopFile -WorkDir $InstallDir -Icon $icon -Description 'Parar o servidor KAMBA Money'
 
-Write-Host "Atalho 'KAMBA Many' criado no Ambiente de Trabalho e no Menu Iniciar."
+Write-Host "Atalho 'KAMBA Money' criado no Ambiente de Trabalho e no Menu Iniciar."

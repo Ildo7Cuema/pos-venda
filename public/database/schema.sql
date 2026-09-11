@@ -1,5 +1,5 @@
 -- ============================================
--- Sistema KAMBA Many - Schema SQLite
+-- Sistema KAMBA Money - Schema SQLite
 -- Conformidade: Decreto 74/19 e 71/25
 -- ============================================
 

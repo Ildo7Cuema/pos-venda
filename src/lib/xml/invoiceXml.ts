@@ -1,5 +1,5 @@
 /**
- * Invoice XML Generator - Sistema KAMBA Many
+ * Invoice XML Generator - Sistema KAMBA Money
  * Gera ficheiro XML individual para cada factura em conformidade
  * com o formato SAF-T Angola (Decreto Presidencial n.º 312/18)
  */
@@ -92,7 +92,7 @@ export function generateInvoiceXML({ invoice, organization }: GenerateXMLOptions
     xml += `    <TaxEntity>Global</TaxEntity>\n`;
     xml += `    <ProductCompanyTaxID>${escapeXml(organization?.nif || '')}</ProductCompanyTaxID>\n`;
     xml += `    <SoftwareCertificateNumber>31</SoftwareCertificateNumber>\n`;
-    xml += `    <ProductID>KAMBA Many</ProductID>\n`;
+    xml += `    <ProductID>KAMBA Money</ProductID>\n`;
     xml += `    <ProductVersion>1.0</ProductVersion>\n`;
     xml += '  </Header>\n';
 

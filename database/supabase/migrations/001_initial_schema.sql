@@ -1,5 +1,5 @@
 -- ============================================
--- Sistema KAMBA Many - Schema Supabase (PostgreSQL)
+-- Sistema KAMBA Money - Schema Supabase (PostgreSQL)
 -- Conformidade: Decreto 74/19 e 71/25
 -- ============================================
 

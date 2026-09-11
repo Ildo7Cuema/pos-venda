@@ -74,9 +74,9 @@ export default function DocsPage() {
       <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/logo.png" alt="KAMBA Many" className="w-10 h-10 rounded-lg" />
+            <img src="/logo.png" alt="KAMBA Money" className="w-10 h-10 rounded-lg" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">KAMBA Many</h1>
+              <h1 className="text-xl font-bold text-gray-900">KAMBA Money</h1>
               <p className="text-xs text-gray-500">Documentação</p>
             </div>
           </Link>
@@ -103,7 +103,7 @@ export default function DocsPage() {
           <p className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1.5 rounded-full text-sm font-semibold mb-4">
             Guia do utilizador
           </p>
-          <h2 className="text-4xl font-extrabold text-gray-900 mb-3">Como usar o KAMBA Many</h2>
+          <h2 className="text-4xl font-extrabold text-gray-900 mb-3">Como usar o KAMBA Money</h2>
           <p className="text-lg text-gray-600">
             Manual prático para vender, controlar stock, emitir facturas e manter o negócio em conformidade
             com a legislação angolana — mesmo sem internet.
@@ -145,7 +145,7 @@ export default function DocsPage() {
             <section id="introducao" className="card scroll-mt-28">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Introdução</h3>
               <p className="mb-4">
-                O <strong>KAMBA Many</strong> é um sistema de ponto de venda, gestão de stock e facturação
+                O <strong>KAMBA Money</strong> é um sistema de ponto de venda, gestão de stock e facturação
                 eletrónica pensado para comerciantes em Angola. Os dados ficam no computador (SQLite) e o
                 sistema continua a funcionar sem ligação à internet.
               </p>
@@ -406,7 +406,7 @@ export default function DocsPage() {
             <section id="conformidade" className="card scroll-mt-28">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Conformidade legal</h3>
               <p className="mb-4">
-                O KAMBA Many está alinhado com o Decreto Executivo n.º 74/19 e o Decreto Presidencial n.º
+                O KAMBA Money está alinhado com o Decreto Executivo n.º 74/19 e o Decreto Presidencial n.º
                 71/25 (facturação eletrónica em Angola).
               </p>
               <ul className="space-y-2 mb-4">
@@ -487,7 +487,7 @@ export default function DocsPage() {
       <footer className="border-t border-gray-200 bg-white/80">
         <div className="container py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-gray-600">© 2026 KAMBA Many. Desenvolvido para Angola 🇦🇴</div>
+            <div className="text-sm text-gray-600">© 2026 KAMBA Money. Desenvolvido para Angola 🇦🇴</div>
             <div className="flex items-center gap-6 text-sm text-gray-600">
               <Link href="/" className="hover:text-[var(--primary)]">
                 Início

@@ -1,5 +1,5 @@
 -- ============================================
--- Sistema KAMBA Many - Seed Data
+-- Sistema KAMBA Money - Seed Data
 -- SuperAdmin e Dados Iniciais
 -- ============================================
 
@@ -7,7 +7,7 @@
 INSERT INTO organizations (id, name, nif, fiscal_regime, is_active)
 VALUES (
     '00000000-0000-0000-0000-000000000001'::uuid,
-    'KAMBA Many - Administração',
+    'KAMBA Money - Administração',
     '9999999999',
     'GERAL',
     true
@@ -124,6 +124,6 @@ BEGIN
     RAISE NOTICE '✓ Seed concluída com sucesso!';
     RAISE NOTICE '  SuperAdmin: ildocuema@gmail.com';
     RAISE NOTICE '  Password: Ildo7..Marques';
-    RAISE NOTICE '  Organização: KAMBA Many - Administração';
+    RAISE NOTICE '  Organização: KAMBA Money - Administração';
     RAISE NOTICE '  Produtos de exemplo: 6 produtos cadastrados';
 END $$;

@@ -1,5 +1,5 @@
 /**
- * TypeScript Types - Sistema KAMBA Many
+ * TypeScript Types - Sistema KAMBA Money
  * Tipos de dados do sistema
  */
 

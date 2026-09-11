@@ -105,7 +105,7 @@ export class SaftGenerator {
             taxEntity: 'Global',
             productCompanyTaxID: '5417082695', // Example Producer NIF
             softwareValidationNumber: '31.1/AGT20', // Supplied by user
-            productID: 'KAMBA Many',
+            productID: 'KAMBA Money',
             productVersion: '1.0.0'
         };
 

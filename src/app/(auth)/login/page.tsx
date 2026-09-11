@@ -73,10 +73,10 @@ export default function LoginPage() {
                 <div className="text-center mb-8">
                     <img
                         src="/logo.png"
-                        alt="KAMBA Many"
+                        alt="KAMBA Money"
                         className="w-20 h-20 mx-auto mb-4 rounded-2xl shadow-md shadow-black/10"
                     />
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">KAMBA Many</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">KAMBA Money</h1>
                     <p className="text-gray-600">O Amigo do Seu Negócio</p>
                 </div>
 

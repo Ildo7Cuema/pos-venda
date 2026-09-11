@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
 cd /d "%~dp0"
-title KAMBA Many - Nao feche esta janela
+title KAMBA Money - Nao feche esta janela
 chcp 65001 >nul
 
 set "NODE_ENV=production"
@@ -26,7 +26,7 @@ if %ERRORLEVEL%==0 (
 )
 
 echo.
-echo   KAMBA Many - O Amigo do Seu Negocio
+echo   KAMBA Money - O Amigo do Seu Negocio
 echo   A iniciar o sistema de producao...
 echo   Nao feche esta janela enquanto estiver a usar o POS.
 echo.
