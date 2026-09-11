@@ -483,7 +483,7 @@ a {
    ============================================ */
 
 .angola-gradient {
-  background: linear-gradient(135deg, #CE1126 0%, #FFCD00 100%);
+  background-image: linear-gradient(135deg, #CE1126 0%, #FFCD00 100%);
 }
 
 .angola-border {

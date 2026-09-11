@@ -57,8 +57,10 @@ export default function Home() {
 
           <h2 className="text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
             Sistema Completo de
-            <span className="block angola-gradient bg-clip-text text-transparent mt-2">
-              Venda, Stock e Facturação
+            <span className="block mt-3">
+              <span className="inline-block angola-gradient text-white px-6 py-3 rounded-2xl shadow-md [text-shadow:0_1px_2px_rgba(0,0,0,0.35)]">
+                Venda, Stock e Facturação
+              </span>
             </span>
           </h2>
 
