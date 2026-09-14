@@ -156,6 +156,29 @@ class SQLiteManager {
                         `);
                     }
 
+                    if (!tableNames.includes('customers')) {
+                        console.log('Running migration: Creating customers table');
+                        this.db.run(`
+                            CREATE TABLE IF NOT EXISTS customers (
+                                id TEXT PRIMARY KEY,
+                                organization_id TEXT NOT NULL,
+                                name TEXT NOT NULL,
+                                nif TEXT,
+                                email TEXT,
+                                phone TEXT,
+                                address TEXT,
+                                notes TEXT,
+                                is_active INTEGER DEFAULT 1,
+                                total_purchases REAL DEFAULT 0,
+                                created_at TEXT DEFAULT (datetime('now')),
+                                updated_at TEXT DEFAULT (datetime('now'))
+                            )
+                        `);
+                        this.db.run(`CREATE INDEX IF NOT EXISTS idx_customers_organization ON customers(organization_id)`);
+                        this.db.run(`CREATE INDEX IF NOT EXISTS idx_customers_nif ON customers(nif)`);
+                        this.db.run(`CREATE INDEX IF NOT EXISTS idx_customers_name ON customers(name)`);
+                    }
+
                     // 5. Subscription Requests Column Migrations (Post-Create check)
                     const requestCols = this.query("PRAGMA table_info(subscription_requests)");
 

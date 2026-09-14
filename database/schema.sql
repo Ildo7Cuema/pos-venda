@@ -79,6 +79,23 @@ CREATE TABLE IF NOT EXISTS subscription_requests (
     FOREIGN KEY (subscription_id) REFERENCES subscriptions(id)
 );
 
+-- Tabela de Clientes
+CREATE TABLE IF NOT EXISTS customers (
+    id TEXT PRIMARY KEY,
+    organization_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    nif TEXT,
+    email TEXT,
+    phone TEXT,
+    address TEXT,
+    notes TEXT,
+    is_active INTEGER DEFAULT 1,
+    total_purchases REAL DEFAULT 0,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE
+);
+
 -- Tabela de Categorias de Produtos
 CREATE TABLE IF NOT EXISTS categories (
     id TEXT PRIMARY KEY,
@@ -336,6 +353,10 @@ CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_organization ON subscriptions(organization_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON subscriptions(status);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_dates ON subscriptions(start_date, end_date);
+
+CREATE INDEX IF NOT EXISTS idx_customers_organization ON customers(organization_id);
+CREATE INDEX IF NOT EXISTS idx_customers_nif ON customers(nif);
+CREATE INDEX IF NOT EXISTS idx_customers_name ON customers(name);
 
 CREATE INDEX IF NOT EXISTS idx_products_organization ON products(organization_id);
 CREATE INDEX IF NOT EXISTS idx_products_code ON products(code);

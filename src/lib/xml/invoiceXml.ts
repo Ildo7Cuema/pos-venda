@@ -5,6 +5,12 @@
  */
 
 import { InvoiceWithItems, DocumentType, Organization } from '@/types';
+import {
+    SOFTWARE_PRODUCT_ID,
+    SOFTWARE_PRODUCER_NIF,
+    SOFTWARE_VALIDATION_NUMBER,
+    SOFTWARE_VERSION,
+} from '@/lib/saft/softwareIdentity';
 
 /**
  * Mapeia tipo de documento para código SAF-T
@@ -90,10 +96,10 @@ export function generateInvoiceXML({ invoice, organization }: GenerateXMLOptions
     xml += `    <CurrencyCode>AOA</CurrencyCode>\n`;
     xml += `    <DateCreated>${formatDate(now)}</DateCreated>\n`;
     xml += `    <TaxEntity>Global</TaxEntity>\n`;
-    xml += `    <ProductCompanyTaxID>${escapeXml(organization?.nif || '')}</ProductCompanyTaxID>\n`;
-    xml += `    <SoftwareCertificateNumber>31</SoftwareCertificateNumber>\n`;
-    xml += `    <ProductID>KAMBA Money</ProductID>\n`;
-    xml += `    <ProductVersion>1.0</ProductVersion>\n`;
+    xml += `    <ProductCompanyTaxID>${SOFTWARE_PRODUCER_NIF}</ProductCompanyTaxID>\n`;
+    xml += `    <SoftwareCertificateNumber>${escapeXml(SOFTWARE_VALIDATION_NUMBER)}</SoftwareCertificateNumber>\n`;
+    xml += `    <ProductID>${escapeXml(SOFTWARE_PRODUCT_ID)}</ProductID>\n`;
+    xml += `    <ProductVersion>${SOFTWARE_VERSION}</ProductVersion>\n`;
     xml += '  </Header>\n';
 
     // Customer in MasterFiles

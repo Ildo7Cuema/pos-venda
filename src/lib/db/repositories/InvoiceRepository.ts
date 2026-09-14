@@ -16,6 +16,8 @@ export interface InvoiceFilters {
     startDate?: string;
     endDate?: string;
     customerSearch?: string;
+    /** 0 = sem limite (exportação SAF-T). Por omissão 100. */
+    limit?: number;
 }
 
 export interface InvoiceStats {
@@ -269,7 +271,13 @@ export class InvoiceRepository {
             params.push(search, search);
         }
 
-        sql += ` ORDER BY issue_date DESC LIMIT 100`;
+        sql += ` ORDER BY issue_date ${filters?.limit === 0 ? 'ASC' : 'DESC'}`;
+
+        const limit = filters?.limit;
+        if (limit !== 0) {
+            sql += ` LIMIT ?`;
+            params.push(limit ?? 100);
+        }
 
         return db.query<Invoice>(sql, params);
     }

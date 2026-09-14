@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuditFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:OECD:StandardAuditFile-Tax:AO_1.01_01" xsi:schemaLocation="urn:OECD:StandardAuditFile-Tax:AO_1.01_01 SAF-T_AO_1.01_01.xsd">
+  <Header>
+    <AuditFileVersion>1.01_01</AuditFileVersion>
+    <CompanyID>5002827247</CompanyID>
+    <TaxRegistrationNumber>5002827247</TaxRegistrationNumber>
+    <TaxAccountingBasis>F</TaxAccountingBasis>
+    <CompanyName>CIMD - PRESTAÇÃO DE SERVIÇO E TECNOLOGIA, , LDA</CompanyName>
+    <BusinessName>CIMD - PRESTAÇÃO DE SERVIÇO E TECNOLOGIA, , LDA</BusinessName>
+    <CompanyAddress>
+      <AddressDetail>Município de Chipindo, Bairro Operário B, Rua Sn202</AddressDetail>
+      <City>Luanda</City>
+      <Country>AO</Country>
+    </CompanyAddress>
+    <FiscalYear>2026</FiscalYear>
+    <StartDate>2026-09-01</StartDate>
+    <EndDate>2026-09-14</EndDate>
+    <CurrencyCode>AOA</CurrencyCode>
+    <DateCreated>2026-09-14</DateCreated>
+    <TaxEntity>Global</TaxEntity>
+    <ProductCompanyTaxID>5417082695</ProductCompanyTaxID>
+    <SoftwareValidationNumber>31.1/AGT20</SoftwareValidationNumber>
+    <ProductID>KAMBA Money</ProductID>
+    <ProductVersion>1.0.0</ProductVersion>
+  </Header>
+  <MasterFiles>
+    <Customer>
+      <CustomerID>CF</CustomerID>
+      <AccountID>Unknown</AccountID>
+      <CustomerTaxID>999999999</CustomerTaxID>
+      <CompanyName>Consumidor Final</CompanyName>
+      <BillingAddress>
+        <AddressDetail>Luanda</AddressDetail>
+        <City>Luanda</City>
+        <Country>AO</Country>
+      </BillingAddress>
+      <SelfBillingIndicator>0</SelfBillingIndicator>
+    </Customer>
+  </MasterFiles>
+  <SourceDocuments>
+    <SalesInvoices>
+      <NumberOfEntries>0</NumberOfEntries>
+      <TotalDebit>0.00</TotalDebit>
+      <TotalCredit>0.00</TotalCredit>
+    </SalesInvoices>
+  </SourceDocuments>
+</AuditFile>
